@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+import { connectionFactory } from "./shared/infra/database/createConnection";
+import { appfactory } from "./shared/infra/http/app";
 
-// Import and run express server
-import "./shared/infra/http/app";
-
-// Setup Postgres SQL connection
-import "./shared/infra/database/createConnection";
+connectionFactory(appfactory);

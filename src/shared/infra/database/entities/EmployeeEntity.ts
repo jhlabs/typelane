@@ -6,16 +6,19 @@ export class Employee {
   public id: number;
 
   @Column("varchar", { length: 200 })
-  public firstName: string;
+  public first_name: string;
 
   @Column("varchar", { length: 200 })
-  public lastName: string;
+  public last_name: string;
 
   @Column("varchar", { length: 200 })
   public email: string;
 
   @Column("varchar", { length: 20 })
   public gender: string;
+
+  @Column("timestamp")
+  public created_at: string;
 
   @Column("varchar", { length: 200 })
   public language: string;
@@ -30,8 +33,5 @@ export class Employee {
   public progress: number;
 
   @Column()
-  public isAdmin: boolean;
-
-  @Column("timestamp")
-  public createdAt: string;
+  public is_admin: boolean;
 }
