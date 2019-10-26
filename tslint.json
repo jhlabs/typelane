@@ -5,7 +5,11 @@
     ],
     "jsRules": {},
     "rules": {
-        "no-console": false
+        "no-console": false,
+        "variable-name": false,
+        "object-literal-sort-keys": false,
+        "trailing-comma": false,
+        "radix": false
     },
     "rulesDirectory": []
 }
