@@ -1,5 +1,16 @@
-import { Get, JsonController, QueryParam } from "routing-controllers";
-import { getConnection, Repository, SelectQueryBuilder } from "typeorm";
+import {
+  BodyParam,
+  Get,
+  JsonController,
+  Post,
+  QueryParam
+} from "routing-controllers";
+import {
+  getConnection,
+  Repository,
+  SelectQueryBuilder,
+  AdvancedConsoleLogger
+} from "typeorm";
 import { Employee } from "../entities";
 import { OrderBy } from "../shared/constants/enum";
 import {
@@ -21,7 +32,7 @@ export class EmployeeController {
     @QueryParam("office") office?: string,
     @QueryParam("division") division?: string,
     @QueryParam("gender") gender?: string,
-    @QueryParam("isAdmin") isAdmin?: boolean,
+    @QueryParam("is_admin") is_admin?: boolean,
     @QueryParam("sort_by") sortBy?: string,
     @QueryParam("order_by") orderBy?: OrderBy,
     @QueryParam("created_after") createdAfter?: Date
@@ -32,7 +43,7 @@ export class EmployeeController {
       office,
       division,
       gender,
-      isAdmin
+      is_admin
     };
     const filteredQuery = filterQuery<Employee>(
       queries,
@@ -50,5 +61,53 @@ export class EmployeeController {
       return filteredByDate.getMany();
     }
     return sortedQuery.getMany();
+  }
+
+  @Post("/employees")
+  public async saveEmployee(
+    @BodyParam("first_name") first_name: string,
+    @BodyParam("last_name") last_name: string,
+    @BodyParam("gender") gender: string,
+    @BodyParam("language") language: string,
+    @BodyParam("office") office: string,
+    @BodyParam("division") division: string,
+    @BodyParam("is_admin") is_admin: boolean,
+    @BodyParam("email") email?: string,
+    @BodyParam("progress") progress?: number
+  ) {
+    const queryBuilder = this.repository.createQueryBuilder("employee");
+    if (!email) {
+      email = "";
+    }
+
+    if (!progress) {
+      progress = 0;
+    }
+    let employee = null;
+    try {
+      employee = await queryBuilder
+        .insert()
+        .into(Employee)
+        .values([
+          {
+            first_name,
+            last_name,
+            gender,
+            language,
+            office,
+            division,
+            is_admin,
+            email,
+            progress
+          }
+        ])
+        .execute();
+    } catch (err) {
+      console.log(err);
+    }
+    if (employee) {
+      return employee.raw[0];
+    }
+    return null;
   }
 }

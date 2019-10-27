@@ -1,8 +1,13 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn
+} from "typeorm";
 
 @Entity()
 export class Employee {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   public id: number;
 
   @Column("varchar", { length: 200 })
@@ -17,7 +22,7 @@ export class Employee {
   @Column("varchar", { length: 20 })
   public gender: string;
 
-  @Column("timestamp")
+  @CreateDateColumn()
   public created_at: string;
 
   @Column("varchar", { length: 200 })
