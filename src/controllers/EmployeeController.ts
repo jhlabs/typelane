@@ -1,23 +1,19 @@
 import {
-  BodyParam,
+  Body,
   Get,
   JsonController,
   Post,
-  QueryParam
+  QueryParams
 } from "routing-controllers";
-import {
-  getConnection,
-  Repository,
-  SelectQueryBuilder,
-  AdvancedConsoleLogger
-} from "typeorm";
+import { getConnection, Repository } from "typeorm";
 import { Employee } from "../entities";
-import { OrderBy } from "../shared/constants/enum";
 import {
   filterCreatedAfterDate,
   filterQuery,
   sortQuery
 } from "../shared/util/queryOperations";
+import { GetAllEmployeesQueryParams } from "./validation/GetAllEmployeesQueryParams";
+import { SaveEmployeeParams } from "./validation/SaveEmployeeParams";
 
 @JsonController()
 export class EmployeeController {
@@ -27,17 +23,18 @@ export class EmployeeController {
     this.repository = connection.getRepository(Employee);
   }
   @Get("/employees")
-  public getAll(
-    @QueryParam("language") language?: string,
-    @QueryParam("office") office?: string,
-    @QueryParam("division") division?: string,
-    @QueryParam("gender") gender?: string,
-    @QueryParam("is_admin") is_admin?: boolean,
-    @QueryParam("sort_by") sortBy?: string,
-    @QueryParam("order_by") orderBy?: OrderBy,
-    @QueryParam("created_after") createdAfter?: Date
-  ) {
+  public getAll(@QueryParams() query: GetAllEmployeesQueryParams) {
     const queryBuilder = this.repository.createQueryBuilder("employee");
+    const {
+      language,
+      office,
+      division,
+      gender,
+      is_admin,
+      sortBy,
+      orderBy,
+      createdAfter
+    } = query;
     const queries = {
       language,
       office,
@@ -64,22 +61,24 @@ export class EmployeeController {
   }
 
   @Post("/employees")
-  public async saveEmployee(
-    @BodyParam("first_name") first_name: string,
-    @BodyParam("last_name") last_name: string,
-    @BodyParam("gender") gender: string,
-    @BodyParam("language") language: string,
-    @BodyParam("office") office: string,
-    @BodyParam("division") division: string,
-    @BodyParam("is_admin") is_admin: boolean,
-    @BodyParam("email") email?: string,
-    @BodyParam("progress") progress?: number
-  ) {
+  public async saveEmployee(@Body() employeeInput: SaveEmployeeParams) {
     const queryBuilder = this.repository.createQueryBuilder("employee");
+    const {
+      first_name,
+      last_name,
+      gender,
+      language,
+      office,
+      division,
+      is_admin
+    } = employeeInput;
+
+    let email = employeeInput.email;
     if (!email) {
       email = "";
     }
 
+    let progress = employeeInput.progress;
     if (!progress) {
       progress = 0;
     }
