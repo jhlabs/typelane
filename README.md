@@ -8,6 +8,13 @@
 4. Run `npm run dev` for development.
 5. To deploy the service simply commit and push to github
 
+## Endpoints
+
+The Api exposes two endpoints:
+
+- GET | https://typelane-web-service.onrender.com/employees
+- POST | https://typelane-web-service.onrender.com/employees
+
 You can test the api endpoints on Postman with explanations and values added below.
 
 [![Open in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/a9b7fd61677e06b2f7ff)
