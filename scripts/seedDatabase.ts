@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import fs from "fs";
 import { Connection, getConnection } from "typeorm";
-import { connectionFactory } from "../src/shared/infra/database/createConnection";
+import { connectionFactory } from "../src/database/createConnection";
 
 function loadCSVFile(fileName: string): string | undefined {
   try {

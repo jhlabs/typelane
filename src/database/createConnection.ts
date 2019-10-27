@@ -1,6 +1,5 @@
-import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { config } from "./config/config";
+import { config } from "./config";
 
 function connectionFactory(callback: () => void): void {
   createConnection(config)
