@@ -48,17 +48,36 @@ async function writeToDatabase(
   }
 }
 
+async function clearTable(connect: () => Connection) {
+  const connection = connect();
+  try {
+    await connection.query("DELETE from employee;");
+    // await connection.query("ALTER SEQUENCE employee_id_seq RESTART 1;");
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function setSequence(connect: () => Connection) {
+  const connection = connect();
+  try {
+    await connection.query("ALTER SEQUENCE employee_id_seq RESTART 1001;");
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 connectionFactory(() => {
   const CSVString = loadCSVFile("MOCK_DATA");
-
+  clearTable(getConnection);
   if (CSVString) {
     const sanitizedCSV = removeEmptyStrings(CSVString);
-    console.log(sanitizedCSV);
     const parsedCSV = parseCSVFile(sanitizedCSV);
-    console.log(parsedCSV);
+
     parsedCSV.forEach(async (item: any) => {
       writeToDatabase(getConnection, item);
     });
+    // setSequence(getConnection);
   }
 
   return;
